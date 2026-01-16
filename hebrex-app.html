@@ -8,14 +8,31 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .word-card {
+            transition: all 0.2s ease;
+        }
+        
+        .word-card:hover {
+            transform: translateY(-4px);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <div id="app" class="p-4">
         <div class="max-w-6xl mx-auto">
             <!-- Header -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex items-center justify-between">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 fade-in">
+                <div class="flex items-center justify-between flex-wrap gap-4">
                     <div class="flex items-center gap-3">
                         <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -25,17 +42,19 @@
                             <p class="text-gray-600">Your personal Hebrew knowledge base</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div id="wordCount" class="text-3xl font-bold text-indigo-600">0</div>
-                        <div class="text-sm text-gray-600">words collected</div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div id="wordCount" class="text-3xl font-bold text-indigo-600">0</div>
+                            <div class="text-sm text-gray-600">words collected</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Search and Add -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex gap-4">
-                    <div class="flex-1 relative">
+            <!-- Controls -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6 fade-in">
+                <div class="flex gap-4 mb-4 flex-wrap">
+                    <div class="flex-1 min-w-[200px] relative">
                         <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
@@ -46,6 +65,12 @@
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         />
                     </div>
+                    <select id="sortSelect" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="alpha-he">Hebrew A-Z</option>
+                        <option value="alpha-en">English A-Z</option>
+                    </select>
                     <button
                         id="addButton"
                         class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition-colors"
@@ -57,17 +82,40 @@
                     </button>
                 </div>
 
+                <!-- Action Buttons -->
+                <div class="flex gap-3 flex-wrap">
+                    <button id="randomButton" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Random Review
+                    </button>
+                    <button id="exportButton" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Export
+                    </button>
+                    <button id="importButton" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                        Import
+                    </button>
+                    <input type="file" id="importFile" accept=".json" class="hidden" />
+                </div>
+
                 <!-- Add Word Form -->
                 <div id="addForm" class="mt-6 p-6 bg-indigo-50 rounded-lg hidden">
                     <h3 id="formTitle" class="text-lg font-semibold mb-4 text-gray-800">Add New Word</h3>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="hebrewInput" placeholder="Hebrew word *" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
                         <input type="text" id="pronunciationInput" placeholder="Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
                         <input type="text" id="englishInput" placeholder="English meaning *" class="px-4 py-2 border border-gray-300 rounded-lg" />
-                        <input type="text" id="rootInput" placeholder="Root (שורש)" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
-                        <textarea id="exampleInput" placeholder="Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2 text-right" rows="2" dir="rtl"></textarea>
-                        <input type="text" id="relatedInput" placeholder="Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2" />
-                        <textarea id="notesInput" placeholder="Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2" rows="2"></textarea>
+                        <input type="text" id="rootInput" placeholder="🌳 Root" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
+                        <textarea id="exampleInput" placeholder="Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
+                        <input type="text" id="relatedInput" placeholder="Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
+                        <textarea id="notesInput" placeholder="Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
                     </div>
                     <div class="flex gap-3 mt-4">
                         <button id="saveButton" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
@@ -101,7 +149,7 @@
 
     <!-- Detail Modal -->
     <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto fade-in">
             <div class="flex justify-between items-start mb-6">
                 <div id="modalHebrew" class="text-5xl font-bold text-indigo-600" dir="rtl"></div>
                 <button id="closeModal" class="text-gray-400 hover:text-gray-600">
@@ -131,26 +179,110 @@
     </div>
 
     <script>
-        // Data storage
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
         let words = [];
         let currentWordId = null;
         let isEditing = false;
+        let currentSort = 'newest';
 
-        // Load words from localStorage
+        // ============================================
+        // STORAGE FUNCTIONS
+        // ============================================
         function loadWords() {
-            const saved = localStorage.getItem('hebrewdex-words');
-            if (saved) {
-                words = JSON.parse(saved);
+            try {
+                const saved = localStorage.getItem('hebrewdex-words');
+                if (saved) {
+                    words = JSON.parse(saved);
+                }
+            } catch (error) {
+                console.error('Error loading words:', error);
+                alert('Error loading your words. Your data may be corrupted.');
             }
             renderWords();
         }
 
-        // Save words to localStorage
         function saveWords() {
-            localStorage.setItem('hebrewdex-words', JSON.stringify(words));
+            try {
+                localStorage.setItem('hebrewdex-words', JSON.stringify(words));
+            } catch (error) {
+                console.error('Error saving words:', error);
+                alert('Error saving your words. Please check your browser storage.');
+            }
         }
 
-        // Render words grid
+        // ============================================
+        // EXPORT / IMPORT
+        // ============================================
+        function exportWords() {
+            if (words.length === 0) {
+                alert('No words to export!');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(words, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hebrex-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importWords(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) {
+                        throw new Error('Invalid format');
+                    }
+                    
+                    const confirm = window.confirm(
+                        `Import ${imported.length} words? This will add to your existing collection.`
+                    );
+                    
+                    if (confirm) {
+                        // Merge imported words, avoiding duplicates by ID
+                        const existingIds = new Set(words.map(w => w.id));
+                        const newWords = imported.filter(w => !existingIds.has(w.id));
+                        words = [...words, ...newWords];
+                        saveWords();
+                        renderWords();
+                        alert(`Successfully imported ${newWords.length} new words!`);
+                    }
+                } catch (error) {
+                    console.error('Import error:', error);
+                    alert('Error importing file. Please make sure it\'s a valid Hebrex backup file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ============================================
+        // SORTING
+        // ============================================
+        function sortWords(wordsArray) {
+            const sorted = [...wordsArray];
+            switch (currentSort) {
+                case 'newest':
+                    return sorted.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+                case 'oldest':
+                    return sorted.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+                case 'alpha-he':
+                    return sorted.sort((a, b) => a.hebrew.localeCompare(b.hebrew, 'he'));
+                case 'alpha-en':
+                    return sorted.sort((a, b) => a.english.localeCompare(b.english));
+                default:
+                    return sorted;
+            }
+        }
+
+        // ============================================
+        // RENDERING
+        // ============================================
         function renderWords(filter = '') {
             const grid = document.getElementById('wordsGrid');
             const emptyState = document.getElementById('emptyState');
@@ -164,9 +296,12 @@
                 filteredWords = words.filter(word => 
                     word.hebrew.includes(filter) || 
                     word.english.toLowerCase().includes(filter.toLowerCase()) ||
-                    word.pronunciation.toLowerCase().includes(filter.toLowerCase())
+                    word.pronunciation.toLowerCase().includes(filter.toLowerCase()) ||
+                    (word.root && word.root.includes(filter))
                 );
             }
+
+            filteredWords = sortWords(filteredWords);
 
             // Hide all states first
             emptyState.classList.add('hidden');
@@ -186,18 +321,26 @@
             }
 
             grid.innerHTML = filteredWords.map(word => `
-                <div class="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-shadow" onclick="showWordDetail(${word.id})">
-                    <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${word.hebrew}</div>
-                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">${word.pronunciation}</div>` : ''}
-                    <div class="text-lg text-gray-800 mb-3">${word.english}</div>
-                    ${word.root ? `<div class="text-sm text-gray-600 text-right" dir="rtl"><span class="font-semibold">שורש:</span> ${word.root}</div>` : ''}
+                <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
+                    <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
+                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">${escapeHtml(word.pronunciation)}</div>` : ''}
+                    <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
+                    ${word.root ? `<div class="text-sm text-gray-600 flex justify-end items-center gap-2" dir="rtl">${escapeHtml(word.root)} <span class="text-base">🌳</span></div>` : ''}
                     <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
                 </div>
             `).join('');
         }
 
-        // Show add form
-        document.getElementById('addButton').addEventListener('click', () => {
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // FORM HANDLING
+        // ============================================
+        function showAddForm() {
             const form = document.getElementById('addForm');
             const formTitle = document.getElementById('formTitle');
             isEditing = false;
@@ -205,18 +348,19 @@
             clearForm();
             formTitle.textContent = 'Add New Word';
             form.classList.toggle('hidden');
-        });
+            if (!form.classList.contains('hidden')) {
+                document.getElementById('hebrewInput').focus();
+            }
+        }
 
-        // Cancel add/edit
-        document.getElementById('cancelButton').addEventListener('click', () => {
+        function hideAddForm() {
             document.getElementById('addForm').classList.add('hidden');
             clearForm();
             isEditing = false;
             currentWordId = null;
-        });
+        }
 
-        // Save word (add or edit)
-        document.getElementById('saveButton').addEventListener('click', () => {
+        function saveWord() {
             const hebrew = document.getElementById('hebrewInput').value.trim();
             const english = document.getElementById('englishInput').value.trim();
 
@@ -260,11 +404,9 @@
 
             saveWords();
             renderWords();
-            document.getElementById('addForm').classList.add('hidden');
-            clearForm();
-        });
+            hideAddForm();
+        }
 
-        // Clear form
         function clearForm() {
             document.getElementById('hebrewInput').value = '';
             document.getElementById('pronunciationInput').value = '';
@@ -275,12 +417,9 @@
             document.getElementById('notesInput').value = '';
         }
 
-        // Search
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            renderWords(e.target.value);
-        });
-
-        // Show word detail
+        // ============================================
+        // MODAL FUNCTIONS
+        // ============================================
         function showWordDetail(id) {
             const word = words.find(w => w.id === id);
             if (!word) return;
@@ -291,39 +430,30 @@
             document.getElementById('modalEnglish').textContent = word.english;
             
             document.getElementById('modalRoot').innerHTML = word.root ? 
-                `<div class="font-semibold text-gray-700 mb-1">Root (שורש):</div><div class="text-xl text-right" dir="rtl">${word.root}</div>` : '';
+                `<div class="flex items-center gap-2 mb-1"><span class="text-xl">🌳</span><span class="font-semibold text-gray-700">Root</span></div><div class="text-xl text-right" dir="rtl">${escapeHtml(word.root)}</div>` : '';
             
             document.getElementById('modalExample').innerHTML = word.example ? 
-                `<div class="font-semibold text-gray-700 mb-1">Example:</div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${word.example}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1">Example:</div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${escapeHtml(word.example)}</div>` : '';
             
             document.getElementById('modalRelated').innerHTML = word.related ? 
-                `<div class="font-semibold text-gray-700 mb-1">Related Words:</div><div class="text-gray-800">${word.related}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1">Related Words:</div><div class="text-gray-800">${escapeHtml(word.related)}</div>` : '';
             
             document.getElementById('modalNotes').innerHTML = word.notes ? 
-                `<div class="font-semibold text-gray-700 mb-1">Notes:</div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${word.notes}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1">Notes:</div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
             document.getElementById('modalDate').textContent = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
             
             document.getElementById('modal').classList.remove('hidden');
         }
 
-        // Close modal
-        document.getElementById('closeModal').addEventListener('click', () => {
+        function closeModal() {
             document.getElementById('modal').classList.add('hidden');
-        });
+        }
 
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target.id === 'modal') {
-                document.getElementById('modal').classList.add('hidden');
-            }
-        });
-
-        // Edit word
-        document.getElementById('editButton').addEventListener('click', () => {
+        function editWord() {
             const word = words.find(w => w.id === currentWordId);
             if (!word) return;
 
-            // Populate form with current word data
             document.getElementById('hebrewInput').value = word.hebrew;
             document.getElementById('pronunciationInput').value = word.pronunciation;
             document.getElementById('englishInput').value = word.english;
@@ -332,28 +462,83 @@
             document.getElementById('relatedInput').value = word.related;
             document.getElementById('notesInput').value = word.notes;
 
-            // Show form and set editing mode
             isEditing = true;
             const formTitle = document.getElementById('formTitle');
             formTitle.textContent = 'Edit Word';
             document.getElementById('addForm').classList.remove('hidden');
-            document.getElementById('modal').classList.add('hidden');
+            closeModal();
 
-            // Scroll to form
             document.getElementById('addForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
+        }
 
-        // Delete word
-        document.getElementById('deleteButton').addEventListener('click', () => {
+        function deleteWord() {
             if (confirm('Delete this word from your Hebrex?')) {
                 words = words.filter(w => w.id !== currentWordId);
                 saveWords();
                 renderWords();
-                document.getElementById('modal').classList.add('hidden');
+                closeModal();
+            }
+        }
+
+        // ============================================
+        // RANDOM REVIEW
+        // ============================================
+        function showRandomWord() {
+            if (words.length === 0) {
+                alert('Add some words first!');
+                return;
+            }
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            showWordDetail(randomWord.id);
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.getElementById('addButton').addEventListener('click', showAddForm);
+        document.getElementById('cancelButton').addEventListener('click', hideAddForm);
+        document.getElementById('saveButton').addEventListener('click', saveWord);
+        document.getElementById('searchInput').addEventListener('input', (e) => renderWords(e.target.value));
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            renderWords(document.getElementById('searchInput').value);
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+        
+        document.getElementById('editButton').addEventListener('click', editWord);
+        document.getElementById('deleteButton').addEventListener('click', deleteWord);
+        document.getElementById('randomButton').addEventListener('click', showRandomWord);
+        document.getElementById('exportButton').addEventListener('click', exportWords);
+        document.getElementById('importButton').addEventListener('click', () => {
+            document.getElementById('importFile').click();
+        });
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                importWords(e.target.files[0]);
+                e.target.value = ''; // Reset file input
             }
         });
 
-        // Initialize
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Escape to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+                hideAddForm();
+            }
+            // N to add new word (when not in input)
+            if (e.key === 'n' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                showAddForm();
+            }
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         loadWords();
     </script>
 </body>
