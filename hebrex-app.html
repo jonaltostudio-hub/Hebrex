@@ -112,7 +112,7 @@
                         <input type="text" id="hebrewInput" placeholder="Hebrew word *" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
                         <input type="text" id="pronunciationInput" placeholder="Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
                         <input type="text" id="englishInput" placeholder="English meaning *" class="px-4 py-2 border border-gray-300 rounded-lg" />
-                        <input type="text" id="rootInput" placeholder="🌳 Root" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
+                        <input type="text" id="rootInput" placeholder="Shoresh (שורש)" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
                         <textarea id="exampleInput" placeholder="Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
                         <input type="text" id="relatedInput" placeholder="Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
                         <textarea id="notesInput" placeholder="Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
@@ -325,7 +325,7 @@
                     <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
-                    ${word.root ? `<div class="text-sm text-gray-600 flex justify-end items-center gap-2" dir="rtl">${escapeHtml(word.root)} <span class="text-base">🌳</span></div>` : ''}
+                    ${word.root ? `<div class="text-sm text-gray-600 flex items-center gap-2"><span class="text-base">🌳</span> <span dir="rtl">${escapeHtml(word.root)}</span></div>` : ''}
                     <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
                 </div>
             `).join('');
@@ -430,8 +430,8 @@
             document.getElementById('modalEnglish').textContent = word.english;
             
             document.getElementById('modalRoot').innerHTML = word.root ? 
-                `<div class="flex items-center gap-2 mb-1"><span class="text-xl">🌳</span><span class="font-semibold text-gray-700">Root</span></div><div class="text-xl text-right" dir="rtl">${escapeHtml(word.root)}</div>` : '';
-            
+                `<div class="mb-2"><div class="flex items-center justify-end gap-2 mb-1"><span dir="rtl" class="text-xl">${escapeHtml(word.root)}</span><span class="text-xl">🌳</span></div></div>` : '';
+                
             document.getElementById('modalExample').innerHTML = word.example ? 
                 `<div class="font-semibold text-gray-700 mb-1">Example:</div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${escapeHtml(word.example)}</div>` : '';
             
