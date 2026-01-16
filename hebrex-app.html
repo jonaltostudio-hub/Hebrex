@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hebrex - Your Hebrew Learning Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="app" class="p-4">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">Hebrex</h1>
+                            <p class="text-gray-600">Your personal Hebrew knowledge base</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div id="wordCount" class="text-3xl font-bold text-indigo-600">0</div>
+                        <div class="text-sm text-gray-600">words collected</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Add -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex gap-4">
+                    <div class="flex-1 relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search your Hebrex..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        />
+                    </div>
+                    <button
+                        id="addButton"
+                        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition-colors"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Word
+                    </button>
+                </div>
+
+                <!-- Add Word Form -->
+                <div id="addForm" class="mt-6 p-6 bg-indigo-50 rounded-lg hidden">
+                    <h3 id="formTitle" class="text-lg font-semibold mb-4 text-gray-800">Add New Word</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="hebrewInput" placeholder="Hebrew word *" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
+                        <input type="text" id="pronunciationInput" placeholder="Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
+                        <input type="text" id="englishInput" placeholder="English meaning *" class="px-4 py-2 border border-gray-300 rounded-lg" />
+                        <input type="text" id="rootInput" placeholder="Root (שורש)" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
+                        <textarea id="exampleInput" placeholder="Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2 text-right" rows="2" dir="rtl"></textarea>
+                        <input type="text" id="relatedInput" placeholder="Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2" />
+                        <textarea id="notesInput" placeholder="Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-2" rows="2"></textarea>
+                    </div>
+                    <div class="flex gap-3 mt-4">
+                        <button id="saveButton" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            Save Word
+                        </button>
+                        <button id="cancelButton" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Words Grid -->
+            <div id="wordsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-12 text-gray-500 hidden">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <p class="text-xl">Your Hebrex is empty!</p>
+                <p class="mt-2">Click "Add Word" to start building your collection</p>
+            </div>
+
+            <!-- No Results State -->
+            <div id="noResults" class="text-center py-12 text-gray-500 hidden">
+                <p class="text-xl">No words match your search</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start mb-6">
+                <div id="modalHebrew" class="text-5xl font-bold text-indigo-600" dir="rtl"></div>
+                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalPronunciation" class="text-xl text-gray-600 mb-4"></div>
+            <div id="modalEnglish" class="text-2xl text-gray-800 mb-6"></div>
+            <div id="modalRoot" class="mb-4"></div>
+            <div id="modalExample" class="mb-4"></div>
+            <div id="modalRelated" class="mb-4"></div>
+            <div id="modalNotes" class="mb-6"></div>
+            <div class="flex justify-between items-center pt-4 border-t">
+                <div id="modalDate" class="text-sm text-gray-500"></div>
+                <div class="flex gap-3">
+                    <button id="editButton" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+                        Edit
+                    </button>
+                    <button id="deleteButton" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let words = [];
+        let currentWordId = null;
+        let isEditing = false;
+
+        // Load words from localStorage
+        function loadWords() {
+            const saved = localStorage.getItem('hebrewdex-words');
+            if (saved) {
+                words = JSON.parse(saved);
+            }
+            renderWords();
+        }
+
+        // Save words to localStorage
+        function saveWords() {
+            localStorage.setItem('hebrewdex-words', JSON.stringify(words));
+        }
+
+        // Render words grid
+        function renderWords(filter = '') {
+            const grid = document.getElementById('wordsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const noResults = document.getElementById('noResults');
+            const wordCount = document.getElementById('wordCount');
+            
+            wordCount.textContent = words.length;
+
+            let filteredWords = words;
+            if (filter) {
+                filteredWords = words.filter(word => 
+                    word.hebrew.includes(filter) || 
+                    word.english.toLowerCase().includes(filter.toLowerCase()) ||
+                    word.pronunciation.toLowerCase().includes(filter.toLowerCase())
+                );
+            }
+
+            // Hide all states first
+            emptyState.classList.add('hidden');
+            noResults.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            if (words.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            if (filteredWords.length === 0) {
+                grid.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            grid.innerHTML = filteredWords.map(word => `
+                <div class="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl transition-shadow" onclick="showWordDetail(${word.id})">
+                    <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${word.hebrew}</div>
+                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">${word.pronunciation}</div>` : ''}
+                    <div class="text-lg text-gray-800 mb-3">${word.english}</div>
+                    ${word.root ? `<div class="text-sm text-gray-600 text-right" dir="rtl"><span class="font-semibold">שורש:</span> ${word.root}</div>` : ''}
+                    <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Show add form
+        document.getElementById('addButton').addEventListener('click', () => {
+            const form = document.getElementById('addForm');
+            const formTitle = document.getElementById('formTitle');
+            isEditing = false;
+            currentWordId = null;
+            clearForm();
+            formTitle.textContent = 'Add New Word';
+            form.classList.toggle('hidden');
+        });
+
+        // Cancel add/edit
+        document.getElementById('cancelButton').addEventListener('click', () => {
+            document.getElementById('addForm').classList.add('hidden');
+            clearForm();
+            isEditing = false;
+            currentWordId = null;
+        });
+
+        // Save word (add or edit)
+        document.getElementById('saveButton').addEventListener('click', () => {
+            const hebrew = document.getElementById('hebrewInput').value.trim();
+            const english = document.getElementById('englishInput').value.trim();
+
+            if (!hebrew || !english) {
+                alert('Please fill in both Hebrew word and English meaning');
+                return;
+            }
+
+            if (isEditing && currentWordId) {
+                // Update existing word
+                const wordIndex = words.findIndex(w => w.id === currentWordId);
+                if (wordIndex !== -1) {
+                    words[wordIndex] = {
+                        ...words[wordIndex],
+                        hebrew: hebrew,
+                        pronunciation: document.getElementById('pronunciationInput').value.trim(),
+                        english: english,
+                        root: document.getElementById('rootInput').value.trim(),
+                        example: document.getElementById('exampleInput').value.trim(),
+                        related: document.getElementById('relatedInput').value.trim(),
+                        notes: document.getElementById('notesInput').value.trim()
+                    };
+                }
+                isEditing = false;
+                currentWordId = null;
+            } else {
+                // Add new word
+                const newWord = {
+                    id: Date.now(),
+                    hebrew: hebrew,
+                    pronunciation: document.getElementById('pronunciationInput').value.trim(),
+                    english: english,
+                    root: document.getElementById('rootInput').value.trim(),
+                    example: document.getElementById('exampleInput').value.trim(),
+                    related: document.getElementById('relatedInput').value.trim(),
+                    notes: document.getElementById('notesInput').value.trim(),
+                    dateAdded: new Date().toISOString()
+                };
+                words.unshift(newWord);
+            }
+
+            saveWords();
+            renderWords();
+            document.getElementById('addForm').classList.add('hidden');
+            clearForm();
+        });
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('hebrewInput').value = '';
+            document.getElementById('pronunciationInput').value = '';
+            document.getElementById('englishInput').value = '';
+            document.getElementById('rootInput').value = '';
+            document.getElementById('exampleInput').value = '';
+            document.getElementById('relatedInput').value = '';
+            document.getElementById('notesInput').value = '';
+        }
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            renderWords(e.target.value);
+        });
+
+        // Show word detail
+        function showWordDetail(id) {
+            const word = words.find(w => w.id === id);
+            if (!word) return;
+
+            currentWordId = id;
+            document.getElementById('modalHebrew').textContent = word.hebrew;
+            document.getElementById('modalPronunciation').textContent = word.pronunciation;
+            document.getElementById('modalEnglish').textContent = word.english;
+            
+            document.getElementById('modalRoot').innerHTML = word.root ? 
+                `<div class="font-semibold text-gray-700 mb-1">Root (שורש):</div><div class="text-xl text-right" dir="rtl">${word.root}</div>` : '';
+            
+            document.getElementById('modalExample').innerHTML = word.example ? 
+                `<div class="font-semibold text-gray-700 mb-1">Example:</div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${word.example}</div>` : '';
+            
+            document.getElementById('modalRelated').innerHTML = word.related ? 
+                `<div class="font-semibold text-gray-700 mb-1">Related Words:</div><div class="text-gray-800">${word.related}</div>` : '';
+            
+            document.getElementById('modalNotes').innerHTML = word.notes ? 
+                `<div class="font-semibold text-gray-700 mb-1">Notes:</div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${word.notes}</div>` : '';
+            
+            document.getElementById('modalDate').textContent = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
+            
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        // Close modal
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('modal').classList.add('hidden');
+        });
+
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                document.getElementById('modal').classList.add('hidden');
+            }
+        });
+
+        // Edit word
+        document.getElementById('editButton').addEventListener('click', () => {
+            const word = words.find(w => w.id === currentWordId);
+            if (!word) return;
+
+            // Populate form with current word data
+            document.getElementById('hebrewInput').value = word.hebrew;
+            document.getElementById('pronunciationInput').value = word.pronunciation;
+            document.getElementById('englishInput').value = word.english;
+            document.getElementById('rootInput').value = word.root;
+            document.getElementById('exampleInput').value = word.example;
+            document.getElementById('relatedInput').value = word.related;
+            document.getElementById('notesInput').value = word.notes;
+
+            // Show form and set editing mode
+            isEditing = true;
+            const formTitle = document.getElementById('formTitle');
+            formTitle.textContent = 'Edit Word';
+            document.getElementById('addForm').classList.remove('hidden');
+            document.getElementById('modal').classList.add('hidden');
+
+            // Scroll to form
+            document.getElementById('addForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Delete word
+        document.getElementById('deleteButton').addEventListener('click', () => {
+            if (confirm('Delete this word from your Hebrex?')) {
+                words = words.filter(w => w.id !== currentWordId);
+                saveWords();
+                renderWords();
+                document.getElementById('modal').classList.add('hidden');
+            }
+        });
+
+        // Initialize
+        loadWords();
+    </script>
+</body>
+</html>
