@@ -132,14 +132,14 @@
                         </svg>
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800">Hebrex</h1>
-                            <p class="text-gray-600">Your personal Hebrew knowledge base</p>
+                            <p class="text-gray-600">Your Personal Hebrew Codex</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="theme-toggle" id="themeToggle" title="Toggle dark mode">☀️</div>
                         <div class="text-right">
                             <div id="wordCount" class="text-3xl font-bold text-indigo-600">0</div>
-                            <div class="text-sm text-gray-600">words collected</div>
+                            <div class="text-sm text-gray-600">Collected</div>
                         </div>
                     </div>
                 </div>
@@ -160,14 +160,14 @@
                         />
                     </div>
                     <select id="viewMode" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="list">📋 List View</option>
-                        <option value="root">🌳 Root View</option>
+                        <option value="list">🌿 Word</option>
+                        <option value="root">🌳 Root</option>
                     </select>
                     <select id="sortSelect" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="alpha-he">Hebrew A-Z</option>
-                        <option value="alpha-en">English A-Z</option>
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="alpha-he">Hebrew</option>
+                        <option value="alpha-en">English</option>
                     </select>
                     <button
                         id="addButton"
@@ -176,7 +176,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                         </svg>
-                        Add Word
+                        Add
                     </button>
                 </div>
 
@@ -186,23 +186,23 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                         </svg>
-                        Random Review
+                        Random
                     </button>
                     <button id="exportButton" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                         </svg>
-                        Export
+                        Save
                     </button>
                     <button id="importButton" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                         </svg>
-                        Import
+                        Load
                     </button>
                     <button id="resetButton" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2">
                         <span class="text-base">🔄</span>
-                        Reset All Data
+                        Reset
                     </button>
                     <input type="file" id="importFile" accept=".json" class="hidden" />
                 </div>
@@ -222,13 +222,13 @@
                             <input type="checkbox" id="biblicalInput" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
                             <label for="biblicalInput" class="text-gray-700 cursor-pointer select-none flex items-center gap-2">
                                 <span class="text-lg">📖</span>
-                                <span>Biblical Hebrew (appears in Tanakh)</span>
+                                <span>Tanakh</span>
                             </label>
                         </div>
                     </div>
                     <div class="flex gap-3 mt-4">
                         <button id="saveButton" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                            Save Word
+                            Save
                         </button>
                         <button id="cancelButton" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                             Cancel
@@ -246,7 +246,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
                 <p class="text-xl">Your Hebrex is empty!</p>
-                <p class="mt-2">Click "Add Word" to start building your collection</p>
+                <p class="mt-2">Click "Add" to start your collection</p>
             </div>
 
             <!-- No Results State -->
@@ -354,7 +354,7 @@
         // ============================================
         function exportWords() {
             if (words.length === 0) {
-                alert('No words to export!');
+                alert('No words to save!');
                 return;
             }
             
@@ -378,7 +378,7 @@
                     }
                     
                     const confirmImport = window.confirm(
-                        `Import ${imported.length} words? This will add to your existing collection.`
+                        `Load ${imported.length} words? This will add to your existing collection.`
                     );
                     
                     if (confirmImport) {
@@ -387,11 +387,11 @@
                         words = [...words, ...newWords];
                         saveWords();
                         renderWords();
-                        alert(`Successfully imported ${newWords.length} new words!`);
+                        alert(`Successfully loaded ${newWords.length} new words!`);
                     }
                 } catch (error) {
                     console.error('Import error:', error);
-                    alert('Error importing file. Please make sure it\'s a valid Hebrex backup file.');
+                    alert('Error loading file. Please make sure it\'s a valid Hebrex backup file.');
                 }
             };
             reader.readAsText(file);
@@ -403,7 +403,7 @@
                 return;
             }
 
-            const confirmMessage = `⚠️ WARNING: This will DELETE ALL ${words.length} words from your Hebrex!\n\nWould you like to export a backup first?`;
+            const confirmMessage = `⚠️ WARNING: This will DELETE ALL ${words.length} words from your Hebrex!\n\nWould you like to save a backup first?`;
             
             if (confirm(confirmMessage)) {
                 // Offer to export first
@@ -417,7 +417,7 @@
                         words = [];
                         saveWords();
                         renderWords();
-                        alert('✅ All data has been reset. Your Hebrex is now empty.');
+                        alert('✅ Your Hebrex is now empty.');
                     }
                 }, 500);
             } else {
@@ -428,7 +428,7 @@
                     words = [];
                     saveWords();
                     renderWords();
-                    alert('✅ All data has been reset. Your Hebrex is now empty.');
+                    alert('✅ Your Hebrex is now empty.');
                 }
             }
         }
@@ -504,7 +504,7 @@
                 <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                     <div class="flex items-start justify-between mb-2">
                         <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                        ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                        ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📖</span>' : ''}
                     </div>
                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
@@ -557,7 +557,7 @@
                                 <div class="word-card bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors" onclick="showWordDetail(${word.id})">
                                     <div class="flex items-start justify-between mb-2">
                                         <div class="text-2xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                                        ${word.biblical ? '<span class="text-xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                                        ${word.biblical ? '<span class="text-xl ml-2" title="Tanakh">📖</span>' : ''}
                                     </div>
                                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                                     <div class="text-base text-gray-800">${escapeHtml(word.english)}</div>
@@ -574,7 +574,7 @@
                     <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                         <div class="flex items-start justify-between mb-2">
                             <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                            ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                            ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📖</span>' : ''}
                         </div>
                         ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                         <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
@@ -601,7 +601,7 @@
             isEditing = false;
             currentWordId = null;
             clearForm();
-            formTitle.textContent = 'Add New Word';
+            formTitle.textContent = 'Add';
             form.classList.toggle('hidden');
             if (!form.classList.contains('hidden')) {
                 document.getElementById('hebrewInput').focus();
@@ -698,7 +698,7 @@
                 `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>📝</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
             const dateText = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
-            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Biblical Hebrew</span></span>' : '';
+            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Tanakh</span></span>' : '';
             document.getElementById('modalDate').innerHTML = dateText + biblicalBadge;
             
             document.getElementById('modal').classList.remove('hidden');
