@@ -287,6 +287,28 @@
         </div>
     </div>
 
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg max-w-md w-full p-6 fade-in">
+            <div class="text-center mb-6">
+                <div class="text-5xl mb-4">⚠️</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Reset All Data?</h3>
+                <p class="text-gray-600" id="resetModalMessage">This will DELETE ALL words from your Hebrex!</p>
+            </div>
+            <div class="space-y-3">
+                <button id="resetYesBackup" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                    Yes, Save Backup First
+                </button>
+                <button id="resetNoBackup" class="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold">
+                    No, Just Delete Everything
+                </button>
+                <button id="resetCancel" class="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ============================================
         // STATE MANAGEMENT
@@ -329,7 +351,7 @@
         // ============================================
         function loadWords() {
             try {
-                const saved = localStorage.getItem('hebrewdex-words');
+                const saved = localStorage.getItem('hebrex-words');
                 if (saved) {
                     words = JSON.parse(saved);
                 }
@@ -342,7 +364,7 @@
 
         function saveWords() {
             try {
-                localStorage.setItem('hebrewdex-words', JSON.stringify(words));
+                localStorage.setItem('hebrex-words', JSON.stringify(words));
             } catch (error) {
                 console.error('Error saving words:', error);
                 alert('Error saving your words. Please check your browser storage.');
@@ -354,7 +376,7 @@
         // ============================================
         function exportWords() {
             if (words.length === 0) {
-                alert('No words to save!');
+                alert('No words to export!');
                 return;
             }
             
@@ -378,7 +400,7 @@
                     }
                     
                     const confirmImport = window.confirm(
-                        `Load ${imported.length} words? This will add to your existing collection.`
+                        `Import ${imported.length} words? This will add to your existing collection.`
                     );
                     
                     if (confirmImport) {
@@ -387,11 +409,11 @@
                         words = [...words, ...newWords];
                         saveWords();
                         renderWords();
-                        alert(`Successfully loaded ${newWords.length} new words!`);
+                        alert(`Successfully imported ${newWords.length} new words!`);
                     }
                 } catch (error) {
                     console.error('Import error:', error);
-                    alert('Error loading file. Please make sure it\'s a valid Hebrex backup file.');
+                    alert('Error importing file. Please make sure it\'s a valid Hebrex backup file.');
                 }
             };
             reader.readAsText(file);
@@ -403,33 +425,38 @@
                 return;
             }
 
-            const confirmMessage = `⚠️ WARNING: This will DELETE ALL ${words.length} words from your Hebrex!\n\nWould you like to save a backup first?`;
+            // Update message with word count
+            document.getElementById('resetModalMessage').textContent = 
+                `This will DELETE ALL ${words.length} word${words.length !== 1 ? 's' : ''} from your Hebrex!`;
             
-            if (confirm(confirmMessage)) {
-                // Offer to export first
+            // Show the modal
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.add('hidden');
+        }
+
+        function performReset(saveBackup) {
+            if (saveBackup) {
+                // Export backup first
                 exportWords();
                 
-                // Give user a moment to save, then ask for final confirmation
+                // Give user a moment to save
                 setTimeout(() => {
-                    const finalConfirm = confirm('Backup downloaded. Are you SURE you want to delete all words?\n\nThis cannot be undone!');
-                    
-                    if (finalConfirm) {
-                        words = [];
-                        saveWords();
-                        renderWords();
-                        alert('✅ Your Hebrex is now empty.');
-                    }
-                }, 500);
-            } else {
-                // They said no to backup, ask if they still want to reset
-                const noBackupConfirm = confirm('Are you SURE you want to reset without a backup?\n\nAll words will be permanently deleted!');
-                
-                if (noBackupConfirm) {
                     words = [];
                     saveWords();
                     renderWords();
-                    alert('✅ Your Hebrex is now empty.');
-                }
+                    closeResetModal();
+                    alert('✅ Backup saved! All data has been reset.');
+                }, 500);
+            } else {
+                // Delete without backup
+                words = [];
+                saveWords();
+                renderWords();
+                closeResetModal();
+                alert('✅ All data has been reset. Your Hebrex is now empty.');
             }
         }
 
@@ -504,7 +531,7 @@
                 <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                     <div class="flex items-start justify-between mb-2">
                         <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                        ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📖</span>' : ''}
+                        ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
                     </div>
                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
@@ -557,7 +584,7 @@
                                 <div class="word-card bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors" onclick="showWordDetail(${word.id})">
                                     <div class="flex items-start justify-between mb-2">
                                         <div class="text-2xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                                        ${word.biblical ? '<span class="text-xl ml-2" title="Tanakh">📖</span>' : ''}
+                                        ${word.biblical ? '<span class="text-xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
                                     </div>
                                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                                     <div class="text-base text-gray-800">${escapeHtml(word.english)}</div>
@@ -574,7 +601,7 @@
                     <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                         <div class="flex items-start justify-between mb-2">
                             <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                            ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📖</span>' : ''}
+                            ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
                         </div>
                         ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                         <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
@@ -601,7 +628,7 @@
             isEditing = false;
             currentWordId = null;
             clearForm();
-            formTitle.textContent = 'Add';
+            formTitle.textContent = 'Add New Word';
             form.classList.toggle('hidden');
             if (!form.classList.contains('hidden')) {
                 document.getElementById('hebrewInput').focus();
@@ -698,7 +725,7 @@
                 `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>📝</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
             const dateText = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
-            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Tanakh</span></span>' : '';
+            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Biblical Hebrew</span></span>' : '';
             document.getElementById('modalDate').innerHTML = dateText + biblicalBadge;
             
             document.getElementById('modal').classList.remove('hidden');
@@ -788,10 +815,18 @@
         });
         document.getElementById('resetButton').addEventListener('click', resetAllData);
 
+        document.getElementById('resetYesBackup').addEventListener('click', () => performReset(true));
+        document.getElementById('resetNoBackup').addEventListener('click', () => performReset(false));
+        document.getElementById('resetCancel').addEventListener('click', closeResetModal);
+        document.getElementById('resetModal').addEventListener('click', (e) => {
+            if (e.target.id === 'resetModal') closeResetModal();
+        });
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal();
                 hideAddForm();
+                closeResetModal();
             }
             if (e.key === 'n' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
                 showAddForm();
