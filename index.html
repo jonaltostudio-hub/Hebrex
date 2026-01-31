@@ -200,6 +200,10 @@
                         </svg>
                         Import
                     </button>
+                    <button id="resetButton" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2">
+                        <span class="text-base">🔄</span>
+                        Reset All Data
+                    </button>
                     <input type="file" id="importFile" accept=".json" class="hidden" />
                 </div>
 
@@ -391,6 +395,42 @@
                 }
             };
             reader.readAsText(file);
+        }
+
+        function resetAllData() {
+            if (words.length === 0) {
+                alert('No data to reset - your Hebrex is already empty!');
+                return;
+            }
+
+            const confirmMessage = `⚠️ WARNING: This will DELETE ALL ${words.length} words from your Hebrex!\n\nWould you like to export a backup first?`;
+            
+            if (confirm(confirmMessage)) {
+                // Offer to export first
+                exportWords();
+                
+                // Give user a moment to save, then ask for final confirmation
+                setTimeout(() => {
+                    const finalConfirm = confirm('Backup downloaded. Are you SURE you want to delete all words?\n\nThis cannot be undone!');
+                    
+                    if (finalConfirm) {
+                        words = [];
+                        saveWords();
+                        renderWords();
+                        alert('✅ All data has been reset. Your Hebrex is now empty.');
+                    }
+                }, 500);
+            } else {
+                // They said no to backup, ask if they still want to reset
+                const noBackupConfirm = confirm('Are you SURE you want to reset without a backup?\n\nAll words will be permanently deleted!');
+                
+                if (noBackupConfirm) {
+                    words = [];
+                    saveWords();
+                    renderWords();
+                    alert('✅ All data has been reset. Your Hebrex is now empty.');
+                }
+            }
         }
 
         // ============================================
@@ -746,6 +786,7 @@
                 e.target.value = '';
             }
         });
+        document.getElementById('resetButton').addEventListener('click', resetAllData);
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
