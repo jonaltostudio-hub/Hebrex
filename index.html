@@ -101,6 +101,23 @@
         .theme-toggle:hover {
             transform: scale(1.1);
         }
+
+        .root-card {
+            transition: all 0.2s ease;
+        }
+
+        .root-card:hover {
+            transform: translateY(-2px);
+        }
+
+        body.dark .root-card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        body.dark .root-header {
+            background-color: #0f172a;
+        }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300">
@@ -142,6 +159,10 @@
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         />
                     </div>
+                    <select id="viewMode" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <option value="list">📋 List View</option>
+                        <option value="root">🌳 Root View</option>
+                    </select>
                     <select id="sortSelect" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         <option value="newest">Newest First</option>
                         <option value="oldest">Oldest First</option>
@@ -193,6 +214,13 @@
                         <textarea id="exampleInput" placeholder="💬 Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
                         <input type="text" id="relatedInput" placeholder="🔗 Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
                         <textarea id="notesInput" placeholder="📝 Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
+                        <div class="col-span-1 md:col-span-2 flex items-center gap-2 px-4 py-3 bg-white rounded-lg border border-gray-300">
+                            <input type="checkbox" id="biblicalInput" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
+                            <label for="biblicalInput" class="text-gray-700 cursor-pointer select-none flex items-center gap-2">
+                                <span class="text-lg">📖</span>
+                                <span>Biblical Hebrew (appears in Tanakh)</span>
+                            </label>
+                        </div>
                     </div>
                     <div class="flex gap-3 mt-4">
                         <button id="saveButton" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
@@ -264,6 +292,7 @@
         let isEditing = false;
         let currentSort = 'newest';
         let isDarkMode = false;
+        let currentViewMode = 'list';
 
         // ============================================
         // DARK MODE
@@ -422,15 +451,99 @@
                 return;
             }
 
+            if (currentViewMode === 'root') {
+                renderRootView(filteredWords);
+            } else {
+                renderListView(filteredWords);
+            }
+        }
+
+        function renderListView(filteredWords) {
+            const grid = document.getElementById('wordsGrid');
             grid.innerHTML = filteredWords.map(word => `
                 <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
-                    <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
+                        ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                    </div>
                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
                     ${word.root ? `<div class="text-sm text-gray-600 flex items-center gap-2"><span class="text-base">🌳</span> <span dir="rtl">${escapeHtml(word.root)}</span></div>` : ''}
                     <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
                 </div>
             `).join('');
+        }
+
+        function renderRootView(filteredWords) {
+            const grid = document.getElementById('wordsGrid');
+            
+            // Group words by root
+            const rootGroups = {};
+            const ungrouped = [];
+            
+            filteredWords.forEach(word => {
+                if (word.root && word.root.trim()) {
+                    const root = word.root.trim();
+                    if (!rootGroups[root]) {
+                        rootGroups[root] = [];
+                    }
+                    rootGroups[root].push(word);
+                } else {
+                    ungrouped.push(word);
+                }
+            });
+
+            let html = '';
+
+            // Render root groups
+            const sortedRoots = Object.keys(rootGroups).sort((a, b) => a.localeCompare(b, 'he'));
+            
+            sortedRoots.forEach(root => {
+                const wordsInRoot = rootGroups[root];
+                
+                html += `
+                    <div class="root-card bg-white rounded-lg shadow-md overflow-hidden fade-in">
+                        <div class="root-header bg-indigo-50 p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🌳</span>
+                                <div>
+                                    <div class="text-2xl font-bold text-indigo-700" dir="rtl">${escapeHtml(root)}</div>
+                                    <div class="text-sm text-gray-600">${wordsInRoot.length} word${wordsInRoot.length !== 1 ? 's' : ''}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 p-4">
+                            ${wordsInRoot.map(word => `
+                                <div class="word-card bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors" onclick="showWordDetail(${word.id})">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <div class="text-2xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
+                                        ${word.biblical ? '<span class="text-xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                                    </div>
+                                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
+                                    <div class="text-base text-gray-800">${escapeHtml(word.english)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render ungrouped words as standalone cards
+            ungrouped.forEach(word => {
+                html += `
+                    <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
+                            ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                        </div>
+                        ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
+                        <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
+                        <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
         }
 
         function escapeHtml(text) {
@@ -482,7 +595,8 @@
                         root: document.getElementById('rootInput').value.trim(),
                         example: document.getElementById('exampleInput').value.trim(),
                         related: document.getElementById('relatedInput').value.trim(),
-                        notes: document.getElementById('notesInput').value.trim()
+                        notes: document.getElementById('notesInput').value.trim(),
+                        biblical: document.getElementById('biblicalInput').checked
                     };
                 }
                 isEditing = false;
@@ -497,6 +611,7 @@
                     example: document.getElementById('exampleInput').value.trim(),
                     related: document.getElementById('relatedInput').value.trim(),
                     notes: document.getElementById('notesInput').value.trim(),
+                    biblical: document.getElementById('biblicalInput').checked,
                     dateAdded: new Date().toISOString()
                 };
                 words.unshift(newWord);
@@ -515,6 +630,7 @@
             document.getElementById('exampleInput').value = '';
             document.getElementById('relatedInput').value = '';
             document.getElementById('notesInput').value = '';
+            document.getElementById('biblicalInput').checked = false;
         }
 
         // ============================================
@@ -541,7 +657,9 @@
             document.getElementById('modalNotes').innerHTML = word.notes ? 
                 `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>📝</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
-            document.getElementById('modalDate').textContent = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
+            const dateText = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
+            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Biblical Hebrew</span></span>' : '';
+            document.getElementById('modalDate').innerHTML = dateText + biblicalBadge;
             
             document.getElementById('modal').classList.remove('hidden');
         }
@@ -561,6 +679,7 @@
             document.getElementById('exampleInput').value = word.example;
             document.getElementById('relatedInput').value = word.related;
             document.getElementById('notesInput').value = word.notes;
+            document.getElementById('biblicalInput').checked = word.biblical || false;
 
             isEditing = true;
             const formTitle = document.getElementById('formTitle');
@@ -600,6 +719,10 @@
         document.getElementById('cancelButton').addEventListener('click', hideAddForm);
         document.getElementById('saveButton').addEventListener('click', saveWord);
         document.getElementById('searchInput').addEventListener('input', (e) => renderWords(e.target.value));
+        document.getElementById('viewMode').addEventListener('change', (e) => {
+            currentViewMode = e.target.value;
+            renderWords(document.getElementById('searchInput').value);
+        });
         document.getElementById('sortSelect').addEventListener('change', (e) => {
             currentSort = e.target.value;
             renderWords(document.getElementById('searchInput').value);
