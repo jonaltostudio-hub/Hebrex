@@ -566,7 +566,7 @@
                 <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                     <div class="flex items-start justify-between mb-2">
                         <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                        ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh>📜</span>' : ''}
+                        ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📜</span>' : ''}
                     </div>
                     ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">💬 ${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
