@@ -535,6 +535,18 @@
             noResults.classList.add('hidden');
             grid.classList.remove('hidden');
 
+            // Letter and Bible views don't depend on words collection
+            if (currentViewMode === 'letter') {
+                renderLetterView();
+                return;
+            }
+            
+            if (currentViewMode === 'bible') {
+                renderBibleView();
+                return;
+            }
+
+            // Word and Root views need words
             if (words.length === 0) {
                 grid.classList.add('hidden');
                 emptyState.classList.remove('hidden');
@@ -549,10 +561,6 @@
 
             if (currentViewMode === 'root') {
                 renderRootView(filteredWords);
-            } else if (currentViewMode === 'letter') {
-                renderLetterView();
-            } else if (currentViewMode === 'bible') {
-                renderBibleView();
             } else {
                 renderListView(filteredWords);
             }
@@ -680,15 +688,17 @@
             
             // Bible content will be added here - for now showing a placeholder
             const html = `
-                <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-3xl font-bold text-indigo-600">בְּרֵאשִׁית Genesis</h2>
-                        <button id="bibleToggle" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-                            ${bibleLanguage === 'hebrew' ? 'Show English' : 'Show Hebrew'}
-                        </button>
-                    </div>
-                    <div id="bibleText" class="text-lg leading-relaxed ${bibleLanguage === 'hebrew' ? 'text-right' : 'text-left'}" ${bibleLanguage === 'hebrew' ? 'dir="rtl"' : ''}>
-                        <p class="mb-4">Loading Genesis text...</p>
+                <div class="col-span-full">
+                    <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-3xl font-bold text-indigo-600">בְּרֵאשִׁית Genesis</h2>
+                            <button id="bibleToggle" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
+                                ${bibleLanguage === 'hebrew' ? 'Show English' : 'Show Hebrew'}
+                            </button>
+                        </div>
+                        <div id="bibleText" class="text-lg leading-relaxed ${bibleLanguage === 'hebrew' ? 'text-right' : 'text-left'}" ${bibleLanguage === 'hebrew' ? 'dir="rtl"' : ''}>
+                            <p class="mb-4">Loading Genesis text...</p>
+                        </div>
                     </div>
                 </div>
             `;
