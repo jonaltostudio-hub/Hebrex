@@ -132,7 +132,7 @@
                         </svg>
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800">Hebrex</h1>
-                            <p class="text-gray-600">Your Personal Hebrew Codex</p>
+                            <p class="text-gray-600">Your Personal Hebrew Companion</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
@@ -161,15 +161,15 @@
                     </div>
                     <select id="viewMode" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         <option value="list">🌿 Word</option>
-                        <option value="root">🌳 Root</option>
+                        <option value="root">🫚 Root</option>
                         <option value="letter">🍃 Letter</option>
-                        <option value="bible">📜 Bible</option>
+                        <option value="bible">📜 Tanakh</option>
                     </select>
                     <select id="sortSelect" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="alpha-he">Hebrew</option>
-                        <option value="alpha-en">English</option>
+                        <option value="newest">New ⬇</option>
+                        <option value="oldest">Old ⬇</option>
+                        <option value="alpha-he">Hebrew ⬇</option>
+                        <option value="alpha-en">English ⬇</option>
                     </select>
                     <button
                         id="addButton"
@@ -185,25 +185,19 @@
                 <!-- Action Buttons -->
                 <div class="flex gap-3 flex-wrap">
                     <button id="randomButton" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                        </svg>
+                        <span class="text-base">🎲</span>
                         Random
                     </button>
                     <button id="exportButton" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
+                        <span class="text-base">💾</span>
                         Save
                     </button>
                     <button id="importButton" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                        </svg>
+                        <span class="text-base">📂</span>
                         Load
                     </button>
                     <button id="resetButton" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2">
-                        <span class="text-base">🔄</span>
+                        <span class="text-base">❌</span>
                         Reset
                     </button>
                     <input type="file" id="importFile" accept=".json" class="hidden" />
@@ -214,16 +208,16 @@
                     <h3 id="formTitle" class="text-lg font-semibold mb-4 text-gray-800">Add New Word</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="hebrewInput" placeholder="עברית Hebrew word *" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
-                        <input type="text" id="pronunciationInput" placeholder="🗣️ Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
+                        <input type="text" id="pronunciationInput" placeholder="💬 Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
                         <input type="text" id="englishInput" placeholder="English meaning *" class="px-4 py-2 border border-gray-300 rounded-lg" />
-                        <input type="text" id="rootInput" placeholder="🌳 Shoresh (שורש)" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
-                        <textarea id="exampleInput" placeholder="💬 Example sentence" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
-                        <input type="text" id="relatedInput" placeholder="🔗 Related words" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
-                        <textarea id="notesInput" placeholder="📝 Personal notes & mnemonics" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
+                        <input type="text" id="rootInput" placeholder="🫚 Root" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
+                        <textarea id="exampleInput" placeholder="📌 Example" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
+                        <input type="text" id="relatedInput" placeholder="🖇 Related" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
+                        <textarea id="notesInput" placeholder="🪶 Note" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
                         <div class="col-span-1 md:col-span-2 flex items-center gap-2 px-4 py-3 bg-white rounded-lg border border-gray-300">
                             <input type="checkbox" id="biblicalInput" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
                             <label for="biblicalInput" class="text-gray-700 cursor-pointer select-none flex items-center gap-2">
-                                <span class="text-lg">📖</span>
+                                <span class="text-lg">📜</span>
                                 <span>Tanakh</span>
                             </label>
                         </div>
@@ -294,15 +288,15 @@
         <div class="bg-white rounded-lg max-w-md w-full p-6 fade-in">
             <div class="text-center mb-6">
                 <div class="text-5xl mb-4">⚠️</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Reset All Data?</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Reset All Words?</h3>
                 <p class="text-gray-600" id="resetModalMessage">This will DELETE ALL words from your Hebrex!</p>
             </div>
             <div class="space-y-3">
                 <button id="resetYesBackup" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
-                    Yes, Save Backup First
+                    Yes, Save First
                 </button>
                 <button id="resetNoBackup" class="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold">
-                    No, Just Delete Everything
+                    No, Just Delete
                 </button>
                 <button id="resetCancel" class="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                     Cancel
@@ -477,7 +471,7 @@
                     saveWords();
                     renderWords();
                     closeResetModal();
-                    alert('✅ Backup saved! All data has been reset.');
+                    alert('✅ The Hebrex has been reset');
                 }, 500);
             } else {
                 // Delete without backup
@@ -485,7 +479,7 @@
                 saveWords();
                 renderWords();
                 closeResetModal();
-                alert('✅ All data has been reset. Your Hebrex is now empty.');
+                alert('✅ The Hebrex has been reset');
             }
         }
 
@@ -572,11 +566,11 @@
                 <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                     <div class="flex items-start justify-between mb-2">
                         <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                        ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                        ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh>📜</span>' : ''}
                     </div>
-                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
+                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">💬 ${escapeHtml(word.pronunciation)}</div>` : ''}
                     <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
-                    ${word.root ? `<div class="text-sm text-gray-600 flex items-center gap-2"><span class="text-base">🌳</span> <span dir="rtl">${escapeHtml(word.root)}</span></div>` : ''}
+                    ${word.root ? `<div class="text-sm text-gray-600 flex items-center gap-2"><span class="text-base">🫚</span> <span dir="rtl">${escapeHtml(word.root)}</span></div>` : ''}
                     <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
                 </div>
             `).join('');
@@ -613,7 +607,7 @@
                     <div class="root-card bg-white rounded-lg shadow-md overflow-hidden fade-in">
                         <div class="root-header bg-indigo-50 p-4 flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <span class="text-2xl">🌳</span>
+                                <span class="text-2xl">🫚</span>
                                 <div>
                                     <div class="text-2xl font-bold text-indigo-700" dir="rtl">${escapeHtml(root)}</div>
                                     <div class="text-sm text-gray-600">${wordsInRoot.length} word${wordsInRoot.length !== 1 ? 's' : ''}</div>
@@ -625,9 +619,9 @@
                                 <div class="word-card bg-gray-50 rounded-lg p-4 cursor-pointer hover:bg-gray-100 transition-colors" onclick="showWordDetail(${word.id})">
                                     <div class="flex items-start justify-between mb-2">
                                         <div class="text-2xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                                        ${word.biblical ? '<span class="text-xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                                        ${word.biblical ? '<span class="text-xl ml-2" title="Tanakh">📜</span>' : ''}
                                     </div>
-                                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
+                                    ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">💬 ${escapeHtml(word.pronunciation)}</div>` : ''}
                                     <div class="text-base text-gray-800">${escapeHtml(word.english)}</div>
                                 </div>
                             `).join('')}
@@ -642,9 +636,9 @@
                     <div class="word-card bg-white rounded-lg shadow-md p-6 cursor-pointer fade-in" onclick="showWordDetail(${word.id})">
                         <div class="flex items-start justify-between mb-2">
                             <div class="text-3xl font-bold text-right flex-1 text-indigo-600" dir="rtl">${escapeHtml(word.hebrew)}</div>
-                            ${word.biblical ? '<span class="text-2xl ml-2" title="Biblical Hebrew">📖</span>' : ''}
+                            ${word.biblical ? '<span class="text-2xl ml-2" title="Tanakh">📜</span>' : ''}
                         </div>
-                        ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">🗣️ ${escapeHtml(word.pronunciation)}</div>` : ''}
+                        ${word.pronunciation ? `<div class="text-sm text-gray-500 text-right mb-2">💬 ${escapeHtml(word.pronunciation)}</div>` : ''}
                         <div class="text-lg text-gray-800 mb-3">${escapeHtml(word.english)}</div>
                         <div class="text-xs text-gray-400 mt-3">Added ${new Date(word.dateAdded).toLocaleDateString()}</div>
                     </div>
@@ -665,11 +659,11 @@
                     </div>
                     <div class="space-y-2 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <span class="text-gray-600">🗣️</span>
+                            <span class="text-gray-600">💬</span>
                             <span class="text-gray-700">${letter.pronunciation}</span>
                         </div>
                         <div class="flex items-center justify-center gap-2">
-                            <span class="text-gray-600">📖</span>
+                            <span class="text-gray-600">📚</span>
                             <span class="text-gray-700 italic">${letter.meaning}</span>
                         </div>
                         <div class="flex items-center justify-center gap-2">
@@ -686,14 +680,14 @@
         function renderBibleView() {
             const grid = document.getElementById('wordsGrid');
             
-            // Bible content will be added here - for now showing a placeholder
+            // Bible content
             const html = `
                 <div class="col-span-full">
                     <div class="bg-white rounded-lg shadow-md p-8 max-w-4xl mx-auto">
                         <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-3xl font-bold text-indigo-600">בְּרֵאשִׁית Genesis</h2>
+                            <h2 class="text-3xl font-bold text-indigo-600">בְּרֵאשִׁית</h2>
                             <button id="bibleToggle" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors">
-                                ${bibleLanguage === 'hebrew' ? 'Show English' : 'Show Hebrew'}
+                                ${bibleLanguage === 'hebrew' ? 'English' : 'Hebrew'}
                             </button>
                         </div>
                         <div id="bibleText" class="text-lg leading-relaxed ${bibleLanguage === 'hebrew' ? 'text-right' : 'text-left'}" ${bibleLanguage === 'hebrew' ? 'dir="rtl"' : ''}>
@@ -721,18 +715,69 @@
         }
 
         function loadGenesisText() {
-            // For now, just Genesis 1:1-5 as a demo
-            // You can expand this with the full text later
+            // Genesis
             const genesisHebrew = `
-                בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ׃
+                .בְּרֵאשִׁית, בָּרָא אֱלֹהִים, אֵת הַשָּׁמַיִם, וְאֵת הָאָרֶץ
                 <br><br>
-                וְהָאָרֶץ הָיְתָה תֹהוּ וָבֹהוּ וְחֹשֶׁךְ עַל פְּנֵי תְהוֹם וְרוּחַ אֱלֹהִים מְרַחֶפֶת עַל פְּנֵי הַמָּיִם׃
+                וְהָאָרֶץ, הָיְתָה תֹהוּ וָבֹהוּ, וְחֹשֶׁךְ, עַל-פְּנֵי תְהוֹם; וְרוּחַ אֱלֹהִים, מְרַחֶפֶת עַל-פְּנֵי הַמָּיִם.׃
                 <br><br>
-                וַיֹּאמֶר אֱלֹהִים יְהִי אוֹר וַיְהִי אוֹר׃
+                וַיֹּאמֶר אֱלֹהִים, יְהִי אוֹר; וַיְהִי-אוֹר.׃
                 <br><br>
-                וַיַּרְא אֱלֹהִים אֶת הָאוֹר כִּי טוֹב וַיַּבְדֵּל אֱלֹהִים בֵּין הָאוֹר וּבֵין הַחֹשֶׁךְ׃
+                .וַיַּרְא אֱלֹהִים אֶת-הָאוֹר, כִּי-טוֹב; וַיַּבְדֵּל אֱלֹהִים, בֵּין הָאוֹר וּבֵין הַחֹשֶׁךְ
                 <br><br>
-                וַיִּקְרָא אֱלֹהִים לָאוֹר יוֹם וְלַחֹשֶׁךְ קָרָא לָיְלָה וַיְהִי עֶרֶב וַיְהִי בֹקֶר יוֹם אֶחָד׃
+                .וַיִּקְרָא אֱלֹהִים לָאוֹר יוֹם, וְלַחֹשֶׁךְ קָרָא לָיְלָה; וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם אֶחָד
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, יְהִי רָקִיעַ בְּתוֹךְ הַמָּיִם, וִיהִי מַבְדִּיל, בֵּין מַיִם לָמָיִם
+                <br><br>
+                .וַיַּעַשׂ אֱלֹהִים, אֶת-הָרָקִיעַ, וַיַּבְדֵּל בֵּין הַמַּיִם אֲשֶׁר מִתַּחַת לָרָקִיעַ, וּבֵין הַמַּיִם אֲשֶׁר מֵעַל לָרָקִיעַ; וַיְהִי-כֵן
+                <br><br>
+                .וַיִּקְרָא אֱלֹהִים לָרָקִיעַ, שָׁמָיִם; וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם שֵׁנִי
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, יִקָּווּ הַמַּיִם מִתַּחַת הַשָּׁמַיִם אֶל-מָקוֹם אֶחָד, וְתֵרָאֶה, הַיַּבָּשָׁה; וַיְהִי-כֵן
+                <br><br>
+                .וַיִּקְרָא אֱלֹהִים לַיַּבָּשָׁה אֶרֶץ, וּלְמִקְוֵה הַמַּיִם קָרָא יַמִּים; וַיַּרְא אֱלֹהִים, כִּי-טוֹב
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, תַּדְשֵׁא הָאָרֶץ דֶּשֶׁא עֵשֶׂב מַזְרִיעַ זֶרַע, עֵץ פְּרִי עֹשֶׂה פְּרִי לְמִינוֹ, אֲשֶׁר זַרְעוֹ-בוֹ עַל-הָאָרֶץ; וַיְהִי-כֵן
+                <br><br>
+                .וַתּוֹצֵא הָאָרֶץ דֶּשֶׁא עֵשֶׂב מַזְרִיעַ זֶרַע, לְמִינֵהוּ, וְעֵץ עֹשֶׂה-פְּרִי אֲשֶׁר זַרְעוֹ-בוֹ, לְמִינֵהוּ; וַיַּרְא אֱלֹהִים, כִּי-טוֹב
+                <br><br>
+                .וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם שְׁלִישִׁי
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, יְהִי מְאֹרֹת בִּרְקִיעַ הַשָּׁמַיִם, לְהַבְדִּיל, בֵּין הַיּוֹם וּבֵין הַלָּיְלָה; וְהָיוּ לְאֹתֹת וּלְמוֹעֲדִים, וּלְיָמִים וְשָׁנִים
+                <br><br>
+                .וְהָיוּ לִמְאוֹרֹת בִּרְקִיעַ הַשָּׁמַיִם, לְהָאִיר עַל-הָאָרֶץ; וַיְהִי-כֵן
+                <br><br>
+                .וַיַּעַשׂ אֱלֹהִים, אֶת-שְׁנֵי הַמְּאֹרֹת הַגְּדֹלִים:  אֶת-הַמָּאוֹר הַגָּדֹל, לְמֶמְשֶׁלֶת הַיּוֹם, וְאֶת-הַמָּאוֹר הַקָּטֹן לְמֶמְשֶׁלֶת הַלַּיְלָה, וְאֵת הַכּוֹכָבִים
+                <br><br>
+                .וַיִּתֵּן אֹתָם אֱלֹהִים, בִּרְקִיעַ הַשָּׁמָיִם, לְהָאִיר, עַל-הָאָרֶץ
+                <br><br>
+                .וְלִמְשֹׁל, בַּיּוֹם וּבַלַּיְלָה, וּלְהַבְדִּיל, בֵּין הָאוֹר וּבֵין הַחֹשֶׁךְ; וַיַּרְא אֱלֹהִים, כִּי-טוֹב
+                <br><br>
+                .וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם רְבִיעִי
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים--יִשְׁרְצוּ הַמַּיִם, שֶׁרֶץ נֶפֶשׁ חַיָּה; וְעוֹף יְעוֹפֵף עַל-הָאָרֶץ, עַל-פְּנֵי רְקִיעַ הַשָּׁמָיִם
+                <br><br>
+                .וַיִּבְרָא אֱלֹהִים, אֶת-הַתַּנִּינִם הַגְּדֹלִים; וְאֵת כָּל-נֶפֶשׁ הַחַיָּה הָרֹמֶשֶׂת אֲשֶׁר שָׁרְצוּ הַמַּיִם לְמִינֵהֶם, וְאֵת כָּל-עוֹף כָּנָף לְמִינֵהוּ, וַיַּרְא אֱלֹהִים, כִּי-טוֹב
+                <br><br>
+                .וַיְבָרֶךְ אֹתָם אֱלֹהִים, לֵאמֹר:  פְּרוּ וּרְבוּ, וּמִלְאוּ אֶת-הַמַּיִם בַּיַּמִּים, וְהָעוֹף, יִרֶב בָּאָרֶץ
+                <br><br>
+                .וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם חֲמִישִׁי
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, תּוֹצֵא הָאָרֶץ נֶפֶשׁ חַיָּה לְמִינָהּ, בְּהֵמָה וָרֶמֶשׂ וְחַיְתוֹ-אֶרֶץ, לְמִינָהּ; וַיְהִי-כֵן
+                <br><br>
+                .וַיַּעַשׂ אֱלֹהִים אֶת-חַיַּת הָאָרֶץ לְמִינָהּ, וְאֶת-הַבְּהֵמָה לְמִינָהּ, וְאֵת כָּל-רֶמֶשׂ הָאֲדָמָה, לְמִינֵהוּ; וַיַּרְא אֱלֹהִים, כִּי-טוֹב
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, נַעֲשֶׂה אָדָם בְּצַלְמֵנוּ כִּדְמוּתֵנוּ; וְיִרְדּוּ בִדְגַת הַיָּם וּבְעוֹף הַשָּׁמַיִם, וּבַבְּהֵמָה וּבְכָל-הָאָרֶץ, וּבְכָל-הָרֶמֶשׂ, הָרֹמֵשׂ עַל-הָאָרֶץ
+                <br><br>
+                .וַיִּבְרָא אֱלֹהִים אֶת-הָאָדָם בְּצַלְמוֹ, בְּצֶלֶם אֱלֹהִים בָּרָא אֹתוֹ:  זָכָר וּנְקֵבָה, בָּרָא אֹתָם
+                <br><br>
+                .וַיְבָרֶךְ אֹתָם, אֱלֹהִים, וַיֹּאמֶר לָהֶם אֱלֹהִים פְּרוּ וּרְבוּ וּמִלְאוּ אֶת-הָאָרֶץ, וְכִבְשֻׁהָ; וּרְדוּ בִּדְגַת הַיָּם, וּבְעוֹף הַשָּׁמַיִם, וּבְכָל-חַיָּה, הָרֹמֶשֶׂת עַל-הָאָרֶץ
+                <br><br>
+                .וַיֹּאמֶר אֱלֹהִים, הִנֵּה נָתַתִּי לָכֶם אֶת-כָּל-עֵשֶׂב זֹרֵעַ זֶרַע אֲשֶׁר עַל-פְּנֵי כָל-הָאָרֶץ, וְאֶת-כָּל-הָעֵץ אֲשֶׁר-בּוֹ פְרִי-עֵץ, זֹרֵעַ זָרַע:  לָכֶם יִהְיֶה, לְאָכְלָה
+                <br><br>
+                .וּלְכָל-חַיַּת הָאָרֶץ וּלְכָל-עוֹף הַשָּׁמַיִם וּלְכֹל רוֹמֵשׂ עַל-הָאָרֶץ, אֲשֶׁר-בּוֹ נֶפֶשׁ חַיָּה, אֶת-כָּל-יֶרֶק עֵשֶׂב, לְאָכְלָה; וַיְהִי-כֵן
+                <br><br>
+                .וַיַּרְא אֱלֹהִים אֶת-כָּל-אֲשֶׁר עָשָׂה, וְהִנֵּה-טוֹב מְאֹד; וַיְהִי-עֶרֶב וַיְהִי-בֹקֶר, יוֹם הַשִּׁשִּׁי
             `;
             
             const genesisEnglish = `
@@ -745,6 +790,58 @@
                 And God saw the light, that it was good; and God divided the light from the darkness.
                 <br><br>
                 And God called the light Day, and the darkness He called Night. And there was evening and there was morning, one day.
+                <br><br>
+                And God said: 'Let there be a firmament in the midst of the waters, and let it divide the waters from the waters.'
+                <br><br>
+                And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament; and it was so.
+                <br><br>
+                And God called the firmament Heaven. And there was evening and there was morning, a second day.
+                <br><br>
+                And God said: 'Let the waters under the heaven be gathered together unto one place, and let the dry land appear.' And it was so.
+                <br><br>
+                And God called the dry land Earth, and the gathering together of the waters called He Seas; and God saw that it was good.
+                <br><br>
+                And God said: 'Let the earth put forth grass, herb yielding seed, and fruit-tree bearing fruit after its kind, wherein is the seed thereof, upon the earth.' And it was so.
+                <br><br>
+                And the earth brought forth grass, herb yielding seed after its kind, and tree bearing fruit, wherein is the seed thereof, after its kind; and God saw that it was good.
+                <br><br>
+                And there was evening and there was morning, a third day.
+                <br><br>
+                And God said: 'Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days and years;
+                <br><br>
+                and let them be for lights in the firmament of the heaven to give light upon the earth.' And it was so.
+                <br><br>
+                And God made the two great lights: the greater light to rule the day, and the lesser light to rule the night; and the stars.
+                <br><br>
+                And God set them in the firmament of the heaven to give light upon the earth,
+                <br><br>
+                and to rule over the day and over the night, and to divide the light from the darkness; and God saw that it was good.
+                <br><br>
+                And there was evening and there was morning, a fourth day.
+                <br><br>
+                And God said: 'Let the waters swarm with swarms of living creatures, and let fowl fly above the earth in the open firmament of heaven.'
+                <br><br>
+                And God created the great sea-monsters, and every living creature that creepeth, wherewith the waters swarmed, after its kind, and every winged fowl after its kind; and God saw that it was good.
+                <br><br>
+                And God blessed them, saying: 'Be fruitful, and multiply, and fill the waters in the seas, and let fowl multiply in the earth.'
+                <br><br>
+                And there was evening and there was morning, a fifth day.
+                <br><br>
+                And God said: 'Let the earth bring forth the living creature after its kind, cattle, and creeping thing, and beast of the earth after its kind.' And it was so.
+                <br><br>
+                And God made the beast of the earth after its kind, and the cattle after their kind, and every thing that creepeth upon the ground after its kind; and God saw that it was good.
+                <br><br>
+                And God said: 'Let us make man in our image, after our likeness; and let them have dominion over the fish of the sea, and over the fowl of the air, and over the cattle, and over all the earth, and over every creeping thing that creepeth upon the earth.'
+                <br><br>
+                And God created man in His own image, in the image of God created He him; male and female created He them.
+                <br><br>
+                And God blessed them; and God said unto them: 'Be fruitful, and multiply, and replenish the earth, and subdue it; and have dominion over the fish of the sea, and over the fowl of the air, and over every living thing that creepeth upon the earth.'
+                <br><br>
+                And God said: 'Behold, I have given you every herb yielding seed, which is upon the face of all the earth, and every tree, in which is the fruit of a tree yielding seed--to you it shall be for food;
+                <br><br>
+                and to every beast of the earth, and to every fowl of the air, and to every thing that creepeth upon the earth, wherein there is a living soul, [I have given] every green herb for food.' And it was so.
+                <br><br>
+                And God saw every thing that He had made, and, behold, it was very good. And there was evening and there was morning, the sixth day.
             `;
             
             const bibleTextEl = document.getElementById('bibleText');
@@ -787,7 +884,7 @@
             const english = document.getElementById('englishInput').value.trim();
 
             if (!hebrew || !english) {
-                alert('Please fill in both Hebrew word and English meaning');
+                alert('Please fill in both Hebrew and English');
                 return;
             }
 
@@ -849,23 +946,23 @@
 
             currentWordId = id;
             document.getElementById('modalHebrew').textContent = word.hebrew;
-            document.getElementById('modalPronunciation').innerHTML = word.pronunciation ? `<span class="inline-flex items-center gap-2">🗣️ ${escapeHtml(word.pronunciation)}</span>` : '';
+            document.getElementById('modalPronunciation').innerHTML = word.pronunciation ? `<span class="inline-flex items-center gap-2">💬 ${escapeHtml(word.pronunciation)}</span>` : '';
             document.getElementById('modalEnglish').textContent = word.english;
             
             document.getElementById('modalRoot').innerHTML = word.root ? 
-                `<div class="mb-2"><div class="flex items-center justify-end gap-2 mb-1"><span dir="rtl" class="text-xl">${escapeHtml(word.root)}</span><span class="text-xl">🌳</span></div></div>` : '';
+                `<div class="mb-2"><div class="flex items-center justify-end gap-2 mb-1"><span dir="rtl" class="text-xl">${escapeHtml(word.root)}</span><span class="text-xl">🫚</span></div></div>` : '';
             
             document.getElementById('modalExample').innerHTML = word.example ? 
-                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>💬</span><span>Example</span></div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${escapeHtml(word.example)}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>📌</span><span>Example</span></div><div class="text-lg text-right bg-gray-50 p-3 rounded" dir="rtl">${escapeHtml(word.example)}</div>` : '';
             
             document.getElementById('modalRelated').innerHTML = word.related ? 
-                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>🔗</span><span>Related Words</span></div><div class="text-gray-800">${escapeHtml(word.related)}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>🖇</span><span>Related</span></div><div class="text-gray-800">${escapeHtml(word.related)}</div>` : '';
             
             document.getElementById('modalNotes').innerHTML = word.notes ? 
-                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>📝</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
+                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>🪶</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
             const dateText = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
-            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📖</span><span>Biblical Hebrew</span></span>' : '';
+            const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📜</span><span>Tanakh</span></span>' : '';
             document.getElementById('modalDate').innerHTML = dateText + biblicalBadge;
             
             document.getElementById('modal').classList.remove('hidden');
