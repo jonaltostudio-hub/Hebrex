@@ -936,13 +936,15 @@
             if (!hebrewWord) return;
             
             // Check if word already exists
-            const exists = words.find(w => w.hebrew === hebrewWord);
-            if (exists) {
-                alert(`"${hebrewWord}" is already in your Hebrex! You can edit it to add more details.`);
+            const existingWord = words.find(w => w.hebrew === hebrewWord);
+            
+            if (existingWord) {
+                // Word exists - open its detail card
+                showWordDetail(existingWord.id);
                 return;
             }
             
-            // Add new word with minimal info
+            // Word doesn't exist - add it
             const newWord = {
                 id: Date.now(),
                 hebrew: hebrewWord,
@@ -959,8 +961,16 @@
             words.unshift(newWord);
             saveWords();
             
-            // Show success message and refresh view
-            alert(`✅ "${hebrewWord}" added! Switch to Word view to edit and complete details.`);
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 fade-in';
+            notification.innerHTML = `✅ "${hebrewWord}" added! Click again to edit.`;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
             
             // Refresh the Bible view to update hover tooltips
             renderBibleView();
