@@ -118,6 +118,21 @@
         body.dark .root-header {
             background-color: #0f172a;
         }
+
+        .bible-word {
+            display: inline-block;
+            transition: all 0.15s ease;
+        }
+
+        .bible-word:hover {
+            background-color: #e0e7ff !important;
+            color: #4338ca !important;
+        }
+
+        body.dark .bible-word:hover {
+            background-color: #312e81 !important;
+            color: #a5b4fc !important;
+        }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300">
@@ -208,12 +223,12 @@
                     <h3 id="formTitle" class="text-lg font-semibold mb-4 text-gray-800">Add New Word</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="hebrewInput" placeholder="עברית Hebrew word *" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
+                        <input type="text" id="nikudInput" placeholder="🌸 Nikud" class="px-4 py-2 border border-gray-300 rounded-lg text-right text-xl" dir="rtl" />
                         <input type="text" id="pronunciationInput" placeholder="💬 Pronunciation" class="px-4 py-2 border border-gray-300 rounded-lg" />
                         <input type="text" id="englishInput" placeholder="English meaning *" class="px-4 py-2 border border-gray-300 rounded-lg" />
                         <input type="text" id="rootInput" placeholder="🫚 Root" class="px-4 py-2 border border-gray-300 rounded-lg text-right" dir="rtl" />
                         <textarea id="exampleInput" placeholder="📌 Example" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2 text-right" rows="2" dir="rtl"></textarea>
                         <input type="text" id="relatedInput" placeholder="🖇 Related" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" />
-                        <textarea id="notesInput" placeholder="🪶 Note" class="px-4 py-2 border border-gray-300 rounded-lg col-span-1 md:col-span-2" rows="2"></textarea>
                         <div class="col-span-1 md:col-span-2 flex items-center gap-2 px-4 py-3 bg-white rounded-lg border border-gray-300">
                             <input type="checkbox" id="biblicalInput" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
                             <label for="biblicalInput" class="text-gray-700 cursor-pointer select-none flex items-center gap-2">
@@ -851,6 +866,10 @@
             const bibleTextEl = document.getElementById('bibleText');
             if (bibleTextEl) {
                 bibleTextEl.innerHTML = bibleLanguage === 'hebrew' ? genesisHebrew : genesisEnglish;
+                // Make words clickable only for Hebrew text
+                if (bibleLanguage === 'hebrew') {
+                    makeWordsClickable();
+                }
             }
         }
 
@@ -858,6 +877,93 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // ============================================
+        // BIBLE WORD CLICK HANDLER
+        // ============================================
+        function makeWordsClickable() {
+            const bibleTextEl = document.getElementById('bibleText');
+            if (!bibleTextEl) return;
+
+            const content = bibleTextEl.innerHTML;
+            
+            // Split content by <br> tags to preserve verses
+            const verses = content.split('<br><br>');
+            
+            const clickableVerses = verses.map(verse => {
+                if (!verse.trim() || verse === '<br>') return verse;
+                
+                // Split verse into words (space-separated)
+                const verseWords = verse.trim().split(/\s+/);
+                
+                // Make each word clickable with hover tooltip
+                const clickableWords = verseWords.map(word => {
+                    if (!word || word === '׃') return word;
+                    
+                    // Clean word for matching (remove punctuation)
+                    const cleanWord = word.replace(/[׃.,;!?]/g, '').trim();
+                    if (!cleanWord) return word;
+                    
+                    // Check if word exists in Hebrex
+                    const existingWord = words.find(w => w.hebrew === cleanWord);
+                    const pronunciation = existingWord ? existingWord.pronunciation : '';
+                    
+                    // Build tooltip title
+                    const tooltip = pronunciation ? pronunciation : 'Click to add';
+                    
+                    return `<span class="bible-word cursor-pointer hover:bg-indigo-100 hover:text-indigo-700 px-1 rounded transition-colors" title="${tooltip}" data-word="${cleanWord}" data-verse="${verse.replace(/"/g, '&quot;')}">${word}</span>`;
+                }).join(' ');
+                
+                return clickableWords;
+            }).join('<br><br>');
+            
+            bibleTextEl.innerHTML = clickableVerses;
+            
+            // Add click event listeners to all bible words
+            document.querySelectorAll('.bible-word').forEach(span => {
+                span.addEventListener('click', function() {
+                    const hebrewWord = this.getAttribute('data-word');
+                    const verse = this.getAttribute('data-verse');
+                    if (hebrewWord) {
+                        addWordFromBible(hebrewWord, verse);
+                    }
+                });
+            });
+        }
+
+        function addWordFromBible(hebrewWord, verse) {
+            if (!hebrewWord) return;
+            
+            // Check if word already exists
+            const exists = words.find(w => w.hebrew === hebrewWord);
+            if (exists) {
+                alert(`"${hebrewWord}" is already in your Hebrex! You can edit it to add more details.`);
+                return;
+            }
+            
+            // Add new word with minimal info
+            const newWord = {
+                id: Date.now(),
+                hebrew: hebrewWord,
+                nikud: '',
+                pronunciation: '',
+                english: '',
+                root: '',
+                example: verse.replace(/<[^>]*>/g, '').trim(),
+                related: '',
+                biblical: true,
+                dateAdded: new Date().toISOString()
+            };
+            
+            words.unshift(newWord);
+            saveWords();
+            
+            // Show success message and refresh view
+            alert(`✅ "${hebrewWord}" added! Switch to Word view to edit and complete details.`);
+            
+            // Refresh the Bible view to update hover tooltips
+            renderBibleView();
         }
 
         // ============================================
@@ -898,12 +1004,12 @@
                     words[wordIndex] = {
                         ...words[wordIndex],
                         hebrew: hebrew,
+                        nikud: document.getElementById('nikudInput').value.trim(),
                         pronunciation: document.getElementById('pronunciationInput').value.trim(),
                         english: english,
                         root: document.getElementById('rootInput').value.trim(),
                         example: document.getElementById('exampleInput').value.trim(),
                         related: document.getElementById('relatedInput').value.trim(),
-                        notes: document.getElementById('notesInput').value.trim(),
                         biblical: document.getElementById('biblicalInput').checked
                     };
                 }
@@ -913,12 +1019,12 @@
                 const newWord = {
                     id: Date.now(),
                     hebrew: hebrew,
+                    nikud: document.getElementById('nikudInput').value.trim(),
                     pronunciation: document.getElementById('pronunciationInput').value.trim(),
                     english: english,
                     root: document.getElementById('rootInput').value.trim(),
                     example: document.getElementById('exampleInput').value.trim(),
                     related: document.getElementById('relatedInput').value.trim(),
-                    notes: document.getElementById('notesInput').value.trim(),
                     biblical: document.getElementById('biblicalInput').checked,
                     dateAdded: new Date().toISOString()
                 };
@@ -932,12 +1038,12 @@
 
         function clearForm() {
             document.getElementById('hebrewInput').value = '';
+            document.getElementById('nikudInput').value = '';
             document.getElementById('pronunciationInput').value = '';
             document.getElementById('englishInput').value = '';
             document.getElementById('rootInput').value = '';
             document.getElementById('exampleInput').value = '';
             document.getElementById('relatedInput').value = '';
-            document.getElementById('notesInput').value = '';
             document.getElementById('biblicalInput').checked = false;
         }
 
@@ -950,7 +1056,16 @@
 
             currentWordId = id;
             document.getElementById('modalHebrew').textContent = word.hebrew;
-            document.getElementById('modalPronunciation').innerHTML = word.pronunciation ? `<span class="inline-flex items-center gap-2">💬 ${escapeHtml(word.pronunciation)}</span>` : '';
+            
+            // Show nikud if it exists
+            document.getElementById('modalPronunciation').innerHTML = '';
+            if (word.nikud) {
+                document.getElementById('modalPronunciation').innerHTML += `<span class="inline-flex items-center gap-2">🌸 <span dir="rtl">${escapeHtml(word.nikud)}</span></span><br>`;
+            }
+            if (word.pronunciation) {
+                document.getElementById('modalPronunciation').innerHTML += `<span class="inline-flex items-center gap-2">💬 ${escapeHtml(word.pronunciation)}</span>`;
+            }
+            
             document.getElementById('modalEnglish').textContent = word.english;
             
             document.getElementById('modalRoot').innerHTML = word.root ? 
@@ -961,9 +1076,6 @@
             
             document.getElementById('modalRelated').innerHTML = word.related ? 
                 `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>🖇</span><span>Related</span></div><div class="text-gray-800">${escapeHtml(word.related)}</div>` : '';
-            
-            document.getElementById('modalNotes').innerHTML = word.notes ? 
-                `<div class="font-semibold text-gray-700 mb-1 flex items-center gap-2"><span>🪶</span><span>Notes</span></div><div class="text-gray-800 bg-yellow-50 p-3 rounded">${escapeHtml(word.notes)}</div>` : '';
             
             const dateText = `Added ${new Date(word.dateAdded).toLocaleDateString()}`;
             const biblicalBadge = word.biblical ? ' <span class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs ml-2"><span>📜</span><span>Tanakh</span></span>' : '';
@@ -981,12 +1093,12 @@
             if (!word) return;
 
             document.getElementById('hebrewInput').value = word.hebrew;
+            document.getElementById('nikudInput').value = word.nikud || '';
             document.getElementById('pronunciationInput').value = word.pronunciation;
             document.getElementById('englishInput').value = word.english;
             document.getElementById('rootInput').value = word.root;
             document.getElementById('exampleInput').value = word.example;
             document.getElementById('relatedInput').value = word.related;
-            document.getElementById('notesInput').value = word.notes;
             document.getElementById('biblicalInput').checked = word.biblical || false;
 
             isEditing = true;
