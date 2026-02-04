@@ -177,6 +177,7 @@
                     <select id="viewMode" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         <option value="list">🌿 Word</option>
                         <option value="root">🫚 Root</option>
+                        <option value="phrase">🌲 Phrase</option>
                         <option value="letter">🍃 Letter</option>
                         <option value="bible">📜 Tanakh</option>
                     </select>
@@ -356,6 +357,32 @@
             { letter: 'ר', name: 'Resh', pronunciation: 'r', meaning: 'Head, Person, Highest', value: 200 },
             { letter: 'ש', name: 'Shin', pronunciation: 'sh', meaning: 'Teeth, Sharp, Press', value: 300 },
             { letter: 'ת', name: 'Tav', pronunciation: 't', meaning: 'Cross, Mark, Sign', value: 400 }
+        ];
+
+        // Common Hebrew Phrases
+        const commonPhrases = [
+            { category: 'Greetings', hebrew: 'שָׁלוֹם', pronunciation: 'Shalom', english: 'Hello / Peace / Goodbye', context: 'Universal greeting, used anytime' },
+            { category: 'Greetings', hebrew: 'בֹּקֶר טוֹב', pronunciation: 'Boker tov', english: 'Good morning', context: 'Morning greeting' },
+            { category: 'Greetings', hebrew: 'עֶרֶב טוֹב', pronunciation: 'Erev tov', english: 'Good evening', context: 'Evening greeting' },
+            { category: 'Greetings', hebrew: 'לַיְלָה טוֹב', pronunciation: 'Layla tov', english: 'Good night', context: 'Before bed' },
+            { category: 'Greetings', hebrew: 'מָה שְׁלוֹמְךָ?', pronunciation: 'Ma shlomkha?', english: 'How are you? (to male)', context: 'Common question' },
+            { category: 'Greetings', hebrew: 'מָה שְׁלוֹמֵךְ?', pronunciation: 'Ma shlomekh?', english: 'How are you? (to female)', context: 'Common question' },
+            { category: 'Courtesy', hebrew: 'תּוֹדָה', pronunciation: 'Todah', english: 'Thank you', context: 'Basic thanks' },
+            { category: 'Courtesy', hebrew: 'תּוֹדָה רַבָּה', pronunciation: 'Todah rabah', english: 'Thank you very much', context: 'Emphatic thanks' },
+            { category: 'Courtesy', hebrew: 'בְּבַקָּשָׁה', pronunciation: 'Bevakasha', english: 'Please / You\'re welcome', context: 'Request or response to thanks' },
+            { category: 'Courtesy', hebrew: 'סְלִיחָה', pronunciation: 'Slicha', english: 'Sorry / Excuse me', context: 'Apology or getting attention' },
+            { category: 'Courtesy', hebrew: 'לֹא נוֹרָא', pronunciation: 'Lo nora', english: 'No problem / It\'s okay', context: 'Casual response to apology' },
+            { category: 'Basic', hebrew: 'כֵּן', pronunciation: 'Ken', english: 'Yes', context: 'Affirmative' },
+            { category: 'Basic', hebrew: 'לֹא', pronunciation: 'Lo', english: 'No', context: 'Negative' },
+            { category: 'Basic', hebrew: 'אֵיפֹה?', pronunciation: 'Eifo?', english: 'Where?', context: 'Question word' },
+            { category: 'Basic', hebrew: 'מָתַי?', pronunciation: 'Matai?', english: 'When?', context: 'Question word' },
+            { category: 'Basic', hebrew: 'מַדּוּעַ?', pronunciation: 'Madu\'a?', english: 'Why?', context: 'Question word' },
+            { category: 'Basic', hebrew: 'אֵיךְ?', pronunciation: 'Eikh?', english: 'How?', context: 'Question word' },
+            { category: 'Useful', hebrew: 'אֲנִי לֹא מֵבִין', pronunciation: 'Ani lo mevin', english: 'I don\'t understand (male)', context: 'When confused' },
+            { category: 'Useful', hebrew: 'אֲנִי לֹא מְבִינָה', pronunciation: 'Ani lo mevina', english: 'I don\'t understand (female)', context: 'When confused' },
+            { category: 'Useful', hebrew: 'אַתָּה מְדַבֵּר אַנְגְלִית?', pronunciation: 'Ata medaber anglit?', english: 'Do you speak English? (to male)', context: 'Finding English speaker' },
+            { category: 'Useful', hebrew: 'שַׁבָּת שָׁלוֹם', pronunciation: 'Shabbat shalom', english: 'Peaceful Sabbath', context: 'Friday evening through Saturday' },
+            { category: 'Useful', hebrew: 'מַזָּל טוֹב', pronunciation: 'Mazal tov', english: 'Congratulations', context: 'Celebrating good news' }
         ];
 
         // ============================================
@@ -544,9 +571,14 @@
             noResults.classList.add('hidden');
             grid.classList.remove('hidden');
 
-            // Letter and Bible views don't depend on words collection
+            // Letter, Phrase, and Bible views don't depend on words collection
             if (currentViewMode === 'letter') {
                 renderLetterView();
+                return;
+            }
+            
+            if (currentViewMode === 'phrase') {
+                renderPhraseView();
                 return;
             }
             
@@ -688,6 +720,42 @@
                     </div>
                 </div>
             `).join('');
+            
+            grid.innerHTML = html;
+        }
+
+        function renderPhraseView() {
+            const grid = document.getElementById('wordsGrid');
+            
+            // Group phrases by category
+            const categories = {};
+            commonPhrases.forEach(phrase => {
+                if (!categories[phrase.category]) {
+                    categories[phrase.category] = [];
+                }
+                categories[phrase.category].push(phrase);
+            });
+            
+            let html = '';
+            
+            // Render each category
+            Object.keys(categories).sort().forEach(category => {
+                html += `
+                    <div class="col-span-full mb-6">
+                        <h3 class="text-2xl font-bold text-indigo-600 mb-4">${category}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${categories[category].map(phrase => `
+                                <div class="word-card bg-white rounded-lg shadow-md p-6 fade-in">
+                                    <div class="text-3xl font-bold text-right mb-2 text-indigo-600" dir="rtl">${phrase.hebrew}</div>
+                                    <div class="text-sm text-gray-500 mb-2">💬 ${phrase.pronunciation}</div>
+                                    <div class="text-lg text-gray-800 mb-3">${phrase.english}</div>
+                                    <div class="text-sm text-gray-600 italic">${phrase.context}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
             
             grid.innerHTML = html;
         }
